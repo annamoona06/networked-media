@@ -1,0 +1,6 @@
+/* selector = the thing we are grabbing on the page */
+
+body{
+    /* values does not need quatation marks for css*/
+    background-color: yellow; 
+}
