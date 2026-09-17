@@ -1,0 +1,14 @@
+.word {
+    position: absolute;
+    white-space: nowrap;
+    font-family: 'Times New Roman', sans-serif;
+        color: black;   
+}
+
+.title {
+    position: absolute;
+    white-space: nowrap;
+    font-family: 'Times New Roman', sans-serif;
+        color: black;
+        font-size: 100px
+}
