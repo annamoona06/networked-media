@@ -20,4 +20,6 @@ p {
 /* you can have multiple id name but only once could be used*/
 #main{
   border: 2px solid red;
+  background-color: yellow;
+  color: black;
 }
