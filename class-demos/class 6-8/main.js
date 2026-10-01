@@ -13,7 +13,9 @@ let colors = [ "#FFFFFF","#89ff87", "#ffe08c",  "rgb(255, 166, 233)",  "#000000"
 // 	console.log("page is fully loaded");
 // })
 
+
 window.onload = () => {
+    // window.onload = () => { is a shorthand syntax for window.addEventListener("load", ()=>{})
     console.log("page has loaded")
     // get element by id
     //rertieve single js element using id
@@ -65,6 +67,7 @@ window.onload = () => {
         // document.getElementsByClassName("all-spans')
         let allSpans = document.querySelectorAll(".all-spans")
         console.log(allSpans)
+        // add fix code later ito use this
         // shorthand for (let s = 0; s < allSpans.length; s++)
         for(let s of allSpans){
             s.style.transform = `rotate(${rotation}deg)`

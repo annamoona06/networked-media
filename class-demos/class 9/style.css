@@ -1,0 +1,16 @@
+/* adding a default length to body element */
+body{
+    height:100%;
+    width:100%;
+    /* setting the margin to 0 to remove overflow scrolling*/
+    margin: 0;
+}
+
+#text{
+    width: 500px;
+    height: 500px;
+    background-color: rgb(255, 193, 193)
+    /* margin-top 40px; */
+    /* margin-left: 100px; */
+    /* the margin code wasn't working for me for some reason but the block appears perfectly fine without them */
+}
