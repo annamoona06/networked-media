@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Seal: say when it's done</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#E9EDF2;--panel:#fff;--ink:#1B2340;--mute:#5B6479;--line:#C9D0DC;--seal:#B3261E;--sealbg:#FBEAE8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10152B;--panel:#192040;--ink:#EEF1F8;--mute:#9AA4BD;--line:#2E3860;--seal:#FF7A70;--sealbg:#3A1F2A}}
+:root[data-theme="dark"]{--bg:#10152B;--panel:#192040;--ink:#EEF1F8;--mute:#9AA4BD;--line:#2E3860;--seal:#FF7A70;--sealbg:#3A1F2A}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 Figtree,system-ui,sans-serif}
+main{max-width:640px;margin:0 auto;padding:24px 16px 48px}
+h1{font:700 28px/1.15 "Bricolage Grotesque",Georgia,sans-serif;margin:0 0 6px}
+p.lead{color:var(--mute);margin:0 0 20px;max-width:52ch}
+.board{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;position:relative}
+canvas{display:block;width:100%;height:auto;aspect-ratio:4/3;border-radius:8px;background:repeating-linear-gradient(0deg,transparent 0 31px,var(--line) 31px 32px);touch-action:none;cursor:crosshair}
+.tools{display:flex;gap:8px;margin:10px 0 0;flex-wrap:wrap;align-items:center}
+.tools .sp{flex:1}
+button.t{font:600 14px Figtree,sans-serif;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:8px 14px;cursor:pointer;min-height:40px}
+button.t:disabled{opacity:.4;cursor:default}
+.status{color:var(--mute);font-size:14px}
+.decide{margin:20px 0 0;display:flex;gap:16px;align-items:center}
+#hold{position:relative;width:84px;height:84px;border-radius:50%;border:2px solid var(--seal);background:var(--sealbg);color:var(--seal);font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;flex:none;overflow:hidden}
+#hold span{position:relative;z-index:1}
+#fill{position:absolute;inset:0;background:var(--seal);transform:scale(0);border-radius:50%;opacity:.9}
+#hold.on{color:#fff}
+#hold:focus-visible,button.t:focus-visible,input:focus-visible,label:focus-within{outline:3px solid var(--ink);outline-offset:2px}
+.touch{margin:12px 0 0;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.hint{font-size:14px;color:var(--mute);margin:0}
+.hint b{color:var(--ink)}
+#rec{display:none;margin-top:24px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;position:relative}
+#rec.show{display:block}
+#stamp{position:absolute;right:16px;top:14px;width:76px;height:76px;border:3px solid var(--seal);color:var(--seal);border-radius:10px;display:grid;place-items:center;font:700 30px "Bricolage Grotesque",Georgia,serif;transform:rotate(-8deg);opacity:.9}
+.stamping #stamp{animation:thud .35s cubic-bezier(.2,1.6,.4,1)}
+@keyframes thud{from{transform:rotate(-8deg) scale(2.2);opacity:0}to{transform:rotate(-8deg) scale(1);opacity:.9}}
+#rec h2{font:700 20px "Bricolage Grotesque",sans-serif;margin:0 90px 12px 0}
+input[type=text]{width:100%;font:600 16px Figtree,sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--ink);margin-bottom:14px}
+dl{margin:0 0 16px;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px}
+dt{color:var(--mute)}dd{margin:0;word-break:break-all}
+fieldset{border:0;padding:0;margin:0 0 6px}
+legend{font-weight:600;margin-bottom:6px;padding:0}
+label{display:block;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:pointer}
+label small{display:block;color:var(--mute)}
+input[type=radio]{accent-color:var(--seal);margin-right:8px}
+#confirm{min-height:22px;color:var(--seal);font-weight:600;font-size:14px;margin:8px 0 0}
+@media (prefers-reduced-motion:reduce){.stamping #stamp{animation:none}}
+</style>
+</head>
+<body>
+<main>
+<h1>Say when it's done.</h1>
+<p class="lead">Draw something, then press and hold to seal it. Sealing records that you chose to stop here, with the time and a fingerprint of the image.</p>
+
+<div class="board">
+<canvas id="c" width="800" height="600" aria-label="Drawing area"></canvas>
+<div class="tools">
+<button class="t" id="undo" disabled>Undo</button>
+<button class="t" id="clear" disabled>Clear</button>
+<span class="sp"></span>
+<span class="status" id="st">Empty. Start drawing.</span>
+</div>
+</div>
+
+<div class="decide">
+<button id="hold" aria-describedby="h" disabled><div id="fill"></div><span>Hold to seal</span></button>
+<p class="hint" id="h"><b>Hold for one second.</b> The pause is on purpose: sealing is your decision, and it can't be undone. Keyboard: hold Space or Enter.</p>
+</div>
+
+<div class="touch"><button class="t" id="tid" hidden>Seal with Touch ID</button><span class="status" id="tmsg" role="status"></span></div>
+
+<section id="rec" aria-live="polite">
+<div id="stamp" aria-hidden="true">印</div>
+<h2>Sealed. This one is yours.</h2>
+<input type="text" id="title" value="Untitled piece" aria-label="Piece title">
+<dl>
+<dt>Sealed on</dt><dd id="when"></dd>
+<dt>Fingerprint</dt><dd id="fp"></dd>
+<dt>Verified by</dt><dd id="ver"></dd>
+<dt>Strokes</dt><dd id="sc"></dd>
+</dl>
+<fieldset>
+<legend>If someone wants to reuse this</legend>
+<label><input type="radio" name="r" value="credit" checked>Credit me<small>Anyone may reuse it if my name stays with it.</small></label>
+<label><input type="radio" name="r" value="ask">Ask me first<small>I get a request before any reuse.</small></label>
+<label><input type="radio" name="r" value="no">No reuse<small>It can be viewed, not copied or remixed.</small></label>
+</fieldset>
+<p id="confirm"></p>
+<div class="tools"><button class="t" id="again">Start a new piece</button></div>
+</section>
+</main>
+<script>
+(function(){
+var c=document.getElementById('c'),x=c.getContext('2d'),strokes=[],cur=null,sealed=false;
+var st=document.getElementById('st'),hold=document.getElementById('hold'),fill=document.getElementById('fill');
+var tid=document.getElementById('tid'),tmsg=document.getElementById('tmsg');var undo=document.getElementById('undo'),clr=document.getElementById('clear'),rec=document.getElementById('rec');
+function ink(){return getComputedStyle(document.documentElement).getPropertyValue('--ink').trim()||'#1B2340'}
+function redraw(){x.clearRect(0,0,c.width,c.height);x.lineCap='round';x.lineJoin='round';x.lineWidth=5;x.strokeStyle=ink();
+strokes.forEach(function(s){x.beginPath();s.forEach(function(p,i){i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])});if(s.length==1)x.lineTo(s[0][0]+.1,s[0][1]);x.stroke()})}
+function ui(){var n=strokes.length;undo.disabled=sealed||!n;clr.disabled=sealed||!n;hold.disabled=sealed||!n;tid.disabled=sealed||!n;
+st.textContent=sealed?'Sealed. Drawing is locked.':n?n+(n==1?' stroke':' strokes')+'. Seal it when you decide it\'s done.':'Empty. Start drawing.'}
+function pt(e){var r=c.getBoundingClientRect();return[(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]}
+c.addEventListener('pointerdown',function(e){if(sealed)return;c.setPointerCapture(e.pointerId);cur=[pt(e)];strokes.push(cur);redraw();ui()});
+c.addEventListener('pointermove',function(e){if(!cur)return;cur.push(pt(e));redraw()});
+['pointerup','pointercancel'].forEach(function(t){c.addEventListener(t,function(){cur=null})});
+undo.onclick=function(){strokes.pop();redraw();ui()};
+clr.onclick=function(){strokes=[];redraw();ui()};
+
+var t0=0,raf=0,DUR=1000;
+function tick(now){var p=Math.min((now-t0)/DUR,1);fill.style.transform='scale('+p+')';
+if(p>=1){stop();doSeal('Press and hold')}else raf=requestAnimationFrame(tick)}
+function start(){if(sealed||hold.disabled)return;hold.classList.add('on');t0=performance.now();raf=requestAnimationFrame(tick)}
+function stop(){cancelAnimationFrame(raf);raf=0;hold.classList.remove('on');fill.style.transform='scale(0)'}
+hold.addEventListener('pointerdown',function(e){e.preventDefault();start()});
+['pointerup','pointerleave','pointercancel'].forEach(function(t){hold.addEventListener(t,function(){if(raf)stop()})});
+hold.addEventListener('keydown',function(e){if((e.key==' '||e.key=='Enter')&&!e.repeat){e.preventDefault();start()}});
+hold.addEventListener('keyup',function(e){if(e.key==' '||e.key=='Enter')stop()});
+
+function hex(buf){return Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0')}).join('')}
+function doSeal(how){sealed=true;ui();document.getElementById('ver').textContent=how||'Press and hold';
+var d=new Date();document.getElementById('when').textContent=d.toLocaleString([], {dateStyle:'long',timeStyle:'short'});
+document.getElementById('sc').textContent=strokes.length;
+var fp=document.getElementById('fp');fp.textContent='Calculating...';
+try{var data=new TextEncoder().encode(c.toDataURL()+d.toISOString());
+crypto.subtle.digest('SHA-256',data).then(function(h){fp.textContent=hex(h).slice(0,24)+'...'}).catch(function(){fp.textContent='Unavailable in this browser'})}
+catch(err){fp.textContent='Unavailable in this browser'}
+rec.classList.add('show');rec.classList.remove('stamping');void rec.offsetWidth;rec.classList.add('stamping');
+rec.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth',block:'nearest'});
+setMsg()}
+var msgs={credit:'Reuse allowed with credit to you.',ask:'Reuse needs your approval first.',no:'Reuse is turned off for this piece.'};
+function setMsg(){var v=document.querySelector('input[name=r]:checked').value;document.getElementById('confirm').textContent='Saved: '+msgs[v]}
+document.querySelectorAll('input[name=r]').forEach(function(r){r.addEventListener('change',setMsg)});
+document.getElementById('again').onclick=function(){sealed=false;strokes=[];redraw();rec.classList.remove('show');ui();window.scrollTo({top:0})};
+matchMedia('(prefers-color-scheme:dark)').addEventListener&&matchMedia('(prefers-color-scheme:dark)').addEventListener('change',redraw);
+
+if(window.PublicKeyCredential&&PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable){
+PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(function(ok){if(ok)tid.hidden=false}).catch(function(){})}
+tid.onclick=function(){if(sealed||tid.disabled)return;tmsg.textContent='Waiting for Touch ID...';
+var ch=crypto.getRandomValues(new Uint8Array(32)),uid=crypto.getRandomValues(new Uint8Array(16));
+navigator.credentials.create({publicKey:{challenge:ch,rp:{name:'Seal'},user:{id:uid,name:'artist',displayName:'Artist'},
+pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],
+authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},timeout:60000}})
+.then(function(){tmsg.textContent='';doSeal('Touch ID')})
+.catch(function(e){tmsg.textContent=(e&&e.name==='NotAllowedError')?'Touch ID was cancelled or blocked here. You can still hold to seal.':'Touch ID is unavailable here. You can still hold to seal.'})};
+redraw();ui();
+})();
+</script>
+</body>
+</html>
