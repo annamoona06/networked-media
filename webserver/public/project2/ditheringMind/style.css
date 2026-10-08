@@ -2,8 +2,6 @@
   background-color: rgb(0, 0, 0);
 }
 
-/* Select "main" id */
-/* you can have multiple id name but only once could be used*/
 #main{
   border: 2px solid rgb(255, 214, 214);
   background-color: rgb(255, 255, 255);
