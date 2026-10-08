@@ -21,7 +21,6 @@ let videoList = [
     "assets/opanchu.mp4",    
 ] 
 
-
 // variables
 let lastActivity = Date.now()
 
@@ -82,7 +81,7 @@ function createRandomVideo() {
     let randomIndex = Math.floor(Math.random() * videoList.length);
     let video = document.createElement("video");
     video.src = videoList[randomIndex];
-    video.classList.add("video-layer");
+    video.classList.add("videoLayer");
     video.autoplay = true;
     video.muted = true;
     video.loop = true;
@@ -100,17 +99,4 @@ function createRandomVideo() {
 
 function markActivity() {
     lastActivity = Date.now()
-}
-
-function pixelate() {
-
-    ctx.drawImage(
-        video,
-        0,
-        0,
-        80,
-        60
-    );
-
-    requestAnimationFrame(pixelate);
 }
