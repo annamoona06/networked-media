@@ -16,7 +16,6 @@ let videoList = [
     "assets/bug.mp4",
     "assets/cell.mp4",   
     "assets/fingertip1.mp4", 
-    "assets/fingertip2.mp4",
     "assets/flower.mp4",   
     "assets/opanchu.mp4",    
 ] 
