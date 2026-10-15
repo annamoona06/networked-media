@@ -70,6 +70,6 @@ app.post("/form-upload", (request, response)=>{
     //console.log in server js only shows up in the terminal because it is a different condole then the one ion the browser
     console.log(request.body)
     //send the client to a different route
-    repsonse.redirect("/")
+    response.redirect("/")
 
 })
