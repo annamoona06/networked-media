@@ -1,0 +1,1 @@
+// how does child and parent connect to each other through js? (other than being in a sublayer as seen in index.html)
