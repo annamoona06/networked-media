@@ -1,6 +1,7 @@
 // i missed lecture today so I got help from a classmate to catch up on the materials covered in class.
 // here are still a few bugs in the code that prevented it to run successfully in my laptop
 // right not only the "forms" view is working, I'm still working on debugging these!
+// one form, one app.post required; have to display data in form; can do images, require another library (deatils will be uploaded to notes)
 
 const express = require('express'); // handles routes and HTTP requests
 const nunjucks = require('nunjucks'); // fills templates with server-provided data
@@ -26,7 +27,7 @@ app.set('view engine', 'njk');
 
 // ------------ new stuff ----------------------------------
 // store data on our server using an array variable
-let allData = [];
+let allData = [{ user: 'anna', message: 'yayy' }, { user: 'anna', message: 'yayy' }];
 
 app.get('/', (request, response)=>{
     // response.render always goes inside an app.get OR an app.post
