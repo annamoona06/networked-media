@@ -1,15 +1,29 @@
-html,body{
-
+html,
+body {
+    /* vw = viewport width */
+    width: 100vw;
+    /* vh = viewport height */
+    height: 100vh;
+    margin: 0;
+    /* change calculation to use border-box to include margin, border, and padding. */
+    box-sizing: border-box;
 }
 
-body{
-
+/* separate selector just for the body */
+body {
+    padding: 10px;
+    border: 10px solid maroon;
 }
 
-.parent{
-    
+.parent {
+    background-color: pink;
+    position: relative;
 }
 
-.child{
-    
+.child {
+    background-color: orange;
+    position: absolute;
+    top: 0;
+    right: 33%;
+    z-index: -1;
 }
