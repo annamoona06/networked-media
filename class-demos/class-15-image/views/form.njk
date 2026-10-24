@@ -1,0 +1,12 @@
+{% include "partial-nav.njk" %}
+
+<form method="POST" action="/send-message">
+    <input type="text" placeholder="write your name" name="user">
+    <input type="text" placeholder="write a message" name="message">
+
+    {# another type of input is file #}
+    {# the name attribute sets the value that the uploadProcessor will look at in the app.post('/sendMessage') #}
+    {# now look at server.js #}
+    <input type="file" value="upload an image" name="theImage">
+    <input type="submit" value="send message">
+</form>

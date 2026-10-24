@@ -1,0 +1,16 @@
+{% include "partial-nav.njk" %}
+
+{% for singleMessage in messagesArrayFromServer %}
+<p>
+    <span>user: </span>
+    <span>{{ singleMessage.user }}</span>
+</p>
+<p>
+    <span>message: </span>
+    <span>{{ singleMessage.message }}</span>
+</p>
+{# adding a group that is the image. we can add class/id here for styling too if needed #}
+<div>
+    <img src="{{singleMessage.imgSrc}}" />
+</div>
+{% endfor %}
