@@ -43,10 +43,10 @@ app.post(
 		let receivedMessage = request.body
 
 		// if there is a file uploaded, store its file name and location inside our object
-		if (req.file) {
+		if (request.file) {
 			// we use receivedMessage variable here and set a new property called imgSrc, which is on top of user and message properties
 			// our files are set to go to this location from line 10
-			receivedMessage.imgSrc = '/upload/' + req.file.filename;
+			receivedMessage.imgSrc = '/upload/' + request.file.filename;
 		}
 		allData.push(receivedMessage);
 		// now go to the /view-all route

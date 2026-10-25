@@ -1,6 +1,6 @@
 {% include "partial-nav.njk" %}
 
-<form method="POST" action="/send-message">
+<form method="POST" action="/send-message" enctype="multipart/form-data">
     <input type="text" placeholder="write your name" name="user">
     <input type="text" placeholder="write a message" name="message">
 

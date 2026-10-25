@@ -1,17 +1,11 @@
-{% include "partial-nav.njk"%}
+{% include "partial-nav.njk" %}
 
-{# in order to acess the server data,
- we need to use the variable we passed in the server.js
- for the render of view all.njk #}
-{# messagesArrayFromServer #}
+<form method="POST" action="/send-message" enctype="multipart/form-data">
+    <input type="text" placeholder="what is your name" name="user">
+    <input type="text" placeholder="write a message" name="message">
 
-{% for singleMessage in messagesArrayFromServer%}
-<p>
-    <span>user: </span>
-    <span>{{ singleMessage.user}}</span>
-</p>
-<p>
-    <span>message: </span>
-    <span>{{ singleMessage.message}}</span>
-</p>
-{% endfor%}
+    {# name must match uploadProcessor.single('theImage') in server.js #}
+    <input type="file" name="theImage" accept="image/*">
+
+    <input type="submit" value="send-message">
+</form>
