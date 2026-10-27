@@ -6,17 +6,17 @@
 </head>
 
 <body>
-{% include "partial-nav.njk" %}
+    {% include "partial-nav.njk" %}
 
-<form method="POST" action="/send-message" enctype="multipart/form-data">
-    <div id="kirby" role="button" tabindex="0" aria-label="Choose an image"></div>
-    <div class="form-row">
-        <input type="file" name="theImage" accept="image/*">
-        <input type="text" placeholder="caption" name="caption1">
-        <input type="submit" value="upload">
-    </div>
-    
-</form>
+    <form method="POST" action="/send-message" enctype="multipart/form-data">
+        <div id="kirby" role="button" tabindex="0" aria-label="Choose an image"></div>
+        <div class="form-row">
+            <input type="file" name="theImage" accept="image/*" class="button-73">
+            <input type="text" placeholder="caption" name="caption1" class="button-73">
+            <input type="submit" value="upload" class="button-1">
+        </div>
+
+    </form>
 </body>
 
 </html>

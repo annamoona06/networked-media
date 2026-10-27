@@ -6,8 +6,6 @@
     <style>
         body {
             background-color: #ffffff;
-            font-family: Times, sans-serif;
-            color: #ffffff;
         }
     </style>
 </head>
@@ -24,7 +22,7 @@
     <div class="gallery-item">
         <img src="{{ singleMessage.imgSrc }}" class="{{ singleMessage.filter }}">
         {% if singleMessage.caption1 %}
-        <p class="gallery-caption {{ singleMessage.captionColor }}">{{ singleMessage.caption1 }}</p>
+        <p class="gallery-caption">{{ singleMessage.caption1 }}</p>
         {% endif %}
     </div>
     {% endfor %}

@@ -1,71 +1,75 @@
+<html>
+
 <head>
     <title>playground</title>
     <link href="style.css" rel="stylesheet">
 </head>
 
-<body>
-{% include "partial-nav.njk" %}
+<body class="no-bg">
+    {% include "partial-nav.njk" %}
 
-<div id="photo-area">
+    <div id="photo-area">
 
-    {% if messagesArrayFromServer.length == 0 %}
-    <p>No photos yet.</p>
-    {% endif %}
+        {% if messagesArrayFromServer.length == 0 %}
+        <p>No photos yet.</p>
+        {% endif %}
 
-    {% for singleMessage in messagesArrayFromServer %}
-    <div class="photo {% if singleMessage.caption1 %}moves{% endif %}"
-        style="left: {{ singleMessage.left }}%; top: {{ singleMessage.top }}%;">
-        <img src="{{ singleMessage.imgSrc }}" class="{{ singleMessage.filter }}">
+        {% for singleMessage in messagesArrayFromServer %}
+        <div class="photo {% if singleMessage.caption1 %}moves{% endif %}"
+            style="left: {{ singleMessage.left }}%; top: {{ singleMessage.top }}%;">
+            <img src="{{ singleMessage.imgSrc }}" class="{{ singleMessage.filter }}">
+        </div>
+
+        {% if singleMessage.caption1 %}
+        <span class="caption"
+            style="left: {{ singleMessage.left }}%; top: {{ singleMessage.top }}%;">{{ singleMessage.caption1 }}</span>
+        {% endif %}
+        {% endfor %}
+
     </div>
 
-    {% if singleMessage.caption1 %}
-    <span class="caption"
-        style="left: {{ singleMessage.left }}%; top: {{ singleMessage.top }}%;">{{ singleMessage.caption1 }}</span>
-    {% endif %}
-    {% endfor %}
+    <script>
+        const area = document.getElementById('photo-area');
+        const allPhotos = document.querySelectorAll('.moves');
 
-</div>
-
-<script>
-    const area = document.getElementById('photo-area');
-    const allPhotos = document.querySelectorAll('.moves');
-
-    for (let i = 0; i < allPhotos.length; i++) {
-        allPhotos[i].style.left = allPhotos[i].offsetLeft + 'px';
-        allPhotos[i].style.top = allPhotos[i].offsetTop + 'px';
-    }
-
-    const movePhoto = (photo) => {
-        const width = photo.offsetWidth;
-        const height = photo.offsetHeight;
-        const maxLeft = area.clientWidth - width;
-        const maxTop = area.clientHeight - height;
-
-        let x = parseFloat(photo.style.left);
-        let y = parseFloat(photo.style.top);
-
-        const direction = Math.floor(Math.random() * 4);
-
-        if (direction === 0) { y = y - height / 2; }
-        if (direction === 1) { y = y + height / 2; }
-        if (direction === 2) { x = x - width / 2; }
-        if (direction === 3) { x = x + width / 2; }
-
-        if (x < 0) { x = x + width; }
-        if (x > maxLeft) { x = x - width; }
-        if (y < 0) { y = y + height; }
-        if (y > maxTop) { y = y - height; }
-
-        photo.style.left = x + 'px';
-        photo.style.top = y + 'px';
-    }
-
-    const moveAll = () => {
         for (let i = 0; i < allPhotos.length; i++) {
-            movePhoto(allPhotos[i]);
+            allPhotos[i].style.left = allPhotos[i].offsetLeft + 'px';
+            allPhotos[i].style.top = allPhotos[i].offsetTop + 'px';
         }
-    }
 
-    setInterval(moveAll, 2000);
-</script>
-</head>
+        const movePhoto = (photo) => {
+            const width = photo.offsetWidth;
+            const height = photo.offsetHeight;
+            const maxLeft = area.clientWidth - width;
+            const maxTop = area.clientHeight - height;
+
+            let x = parseFloat(photo.style.left);
+            let y = parseFloat(photo.style.top);
+
+            const direction = Math.floor(Math.random() * 4);
+
+            if (direction === 0) { y = y - height / 2; }
+            if (direction === 1) { y = y + height / 2; }
+            if (direction === 2) { x = x - width / 2; }
+            if (direction === 3) { x = x + width / 2; }
+
+            if (x < 0) { x = x + width; }
+            if (x > maxLeft) { x = x - width; }
+            if (y < 0) { y = y + height; }
+            if (y > maxTop) { y = y - height; }
+
+            photo.style.left = x + 'px';
+            photo.style.top = y + 'px';
+        }
+
+        const moveAll = () => {
+            for (let i = 0; i < allPhotos.length; i++) {
+                movePhoto(allPhotos[i]);
+            }
+        }
+
+        setInterval(moveAll, 2000);
+    </script>
+</body>
+
+</html>

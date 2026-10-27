@@ -17,7 +17,6 @@ app.set('view engine', 'njk');
 let allData = [];
 
 let allFilters = ['filter-normal', 'filter-warm', 'filter-cool', 'filter-gray'];
-let allCaptionColors = ['caption-white', 'caption-black'];
 
 const randomBetween = (min, max) => {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
