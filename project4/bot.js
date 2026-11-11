@@ -22,29 +22,33 @@ async function makeStatus(text) {
 let index = 0;
 
 setInterval(async () => {
+    try{
     // TODO: ADD API REQUEST
     // change localhost to your partner's droplet IP (their server must be running)
     // if needed, change the port (6003) to match your partner's app.listen in *their* server.js
-    let url = 'http://161.35.53.32:6003/get-data';
+    const url = 'http://161.35.53.32:6003/get-data';
 
+    let response = await fetch(url);
     let json = await response.json();
-    let response = await fetch(url)
 
     if (json.length === 0) return; // nothing to post yet
 
-    // console.log(json)
+    console.log('item:', json[index % json.length])
     // TODO: SELECT ITEM FROM JSON AND MANIPULATE IT FOR YOUR BOT
     //    the json is an array, so you will need to select a specific item from it 
     //    and whatever property you would like to access. 
     //    likely, you will need to test your partner's data and see how they format it
     let post = meowSentence(json[index % json.length].text);
 
+    // contorl length of texts
     if (post.length > 500) post = post.slice(0, 497) + '...';
     
     // make our status
-    makeStatus(post);
-
+    await makeStatus(post);
     index++;
+    } catch (err) {
+        console.error('Bot error:', err);
+    }
 
     // TODO: CHANGE 5000ms TO YOUR SPECIFIC INTERVAL
 }, 5000);
