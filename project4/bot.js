@@ -34,24 +34,25 @@ setInterval(async () => {
     if (json.length === 0) return; // nothing to post yet
 
     console.log('item:', json[index % json.length])
+    
+     let item = json[index % json.length];
+    index++;
     // TODO: SELECT ITEM FROM JSON AND MANIPULATE IT FOR YOUR BOT
-    //    the json is an array, so you will need to select a specific item from it 
-    //    and whatever property you would like to access. 
-    //    likely, you will need to test your partner's data and see how they format it
-    let post = meowSentence(json[index % json.length].text);
+  
+    let post = meowSentence(json[index % json.length].message);
 
     // contorl length of texts
     if (post.length > 500) post = post.slice(0, 497) + '...';
     
     // make our status
     await makeStatus(post);
-    index++;
+
     } catch (err) {
         console.error('Bot error:', err);
     }
 
     // TODO: CHANGE 5000ms TO YOUR SPECIFIC INTERVAL
-}, 5000);
+}, 10000);
 
 function meowSentence(text) {
     return text
