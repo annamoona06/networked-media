@@ -14,14 +14,14 @@ async function makeStatus(text) {
     const status = await masto.v1.statuses.create({
         status: text,
         // TODO: change visability to public when project ready to run
-        visibility: 'private',
+        visibility: 'public',
     });
 }
 
 //index 
 let index = 0;
 
-setInterval(async () => {
+async function runBot() {
     try{
     // TODO: ADD API REQUEST
     // change localhost to your partner's droplet IP (their server must be running)
@@ -33,26 +33,35 @@ setInterval(async () => {
 
     if (json.length === 0) return; // nothing to post yet
 
-    console.log('item:', json[index % json.length])
-    
-     let item = json[index % json.length];
-    index++;
+
     // TODO: SELECT ITEM FROM JSON AND MANIPULATE IT FOR YOUR BOT
-  
-    let post = meowSentence(json[index % json.length].message);
+    let item = json[index % json.length];
+    console.log('item:', item);
+
+    let post = meowSentence(item.message);
 
     // contorl length of texts
-    if (post.length > 500) post = post.slice(0, 497) + '...';
+    if (post.length > 500) {
+        post = post.slice(0, 497) + '...';
+    }
     
     // make our status
     await makeStatus(post);
+
+    index++;
+    console.log('next index:', index);
 
     } catch (err) {
         console.error('Bot error:', err);
     }
 
     // TODO: CHANGE 5000ms TO YOUR SPECIFIC INTERVAL
-}, 10000);
+}
+
+//testing: starts immediately
+runBot();
+
+setInterval(runBot, 720000);
 
 function meowSentence(text) {
     return text
@@ -68,14 +77,14 @@ function meowWord(word) {
     const len = word.length;
 
     if (allUpper) {
-        return 'M E O W !!!';
+        return 'Anna( ´・ω・)ﾉ≽^•⩊•^≼M E O W !!!';
     } else if (len > 10) {
-        return hasUpper ? '(=ↀωↀ=) MEowMeOWMeoWMEOW' : '(=^-ω-^=) meowmeowmeowmeowmeow';
+        return hasUpper ? 'Lisa( ´・ω・)ﾉ(=ↀωↀ=)MEowMeOWMeoWMEOW' : 'Wing( ´・ω・)ﾉ(=^-ω-^=) meowmeowmeowmeowmeow';
     } else if (len > 5) {
-        return hasUpper ? '(=♡ω♡=) MEOW! MEOW!! MEOW!!!!!!!' : '(=ＴェＴ=) meow meow meow!';
+        return hasUpper ? 'Lam( ´・ω・)ﾉ(=♡ω♡=) MEOW! MEOW!! MEOW!!!!!!!' : 'Jennifer( ´・ω・)ﾉ(=ＴェＴ=) meow meow meow!';
     } else if (len >= 3) {
-        return hasUpper ? 'ヾ(=`ω´=)ノ” Meow..MEOW!' : '(=｀ω´=) meow meow!';
+        return hasUpper ? 'Anita( ´・ω・)ﾉヾ(=`ω´=)ノ” Meow..MEOW!' : 'Sam( ´・ω・)ﾉ(=｀ω´=) meow meow!';
     } else {
-        return hasUpper ? '(=˃ᆺ˂=) MEOW!' : '(=^‥^=) meow!';
+        return hasUpper ? 'Salma( ´・ω・)ﾉ(=˃ᆺ˂=) MEOW!' : 'Kiki( ´・ω・)ﾉ(=^‥^=) meow!';
     }
 }
