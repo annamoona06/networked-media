@@ -1,0 +1,75 @@
+// this builds off of class-18-demo
+// we are adding the fetch request in our interval function
+
+require('dotenv').config()
+
+const m = require('masto')
+
+const masto = m.createRestAPIClient({
+    url: 'https://networked-media.itp.io/',
+    accessToken: process.env.TOKEN,
+});
+
+async function makeStatus(text) {
+    const status = await masto.v1.statuses.create({
+        status: text,
+        // TODO: change visability to public when project ready to run
+        visibility: 'private',
+    });
+}
+
+//index 
+let index = 0;
+
+setInterval(async () => {
+    // TODO: ADD API REQUEST
+    // change localhost to your partner's droplet IP (their server must be running)
+    // if needed, change the port (6003) to match your partner's app.listen in *their* server.js
+    let url = 'http://161.35.53.32//:6003/get-data';
+
+    let json = await response.json();
+
+    if (json.length === 0) return; // nothing to post yet
+
+    // console.log(json)
+    // TODO: SELECT ITEM FROM JSON AND MANIPULATE IT FOR YOUR BOT
+    //    the json is an array, so you will need to select a specific item from it 
+    //    and whatever property you would like to access. 
+    //    likely, you will need to test your partner's data and see how they format it
+    let post = meowSentence(json[index % json.length].text);
+
+    if (post.length > 500) post = post.slice(0, 497) + '...';
+    
+    // make our status
+    makeStatus(post);
+
+    index++;
+
+    // TODO: CHANGE 5000ms TO YOUR SPECIFIC INTERVAL
+}, 5000);
+
+function meowSentence(text) {
+    return text
+        .split(' ')
+        .filter(w => w !== '')
+        .map(meowWord)
+        .join(' ');
+}
+
+function meowWord(word) {
+    const hasUpper = /[A-Z]/.test(word);
+    const allUpper = hasUpper && word === word.toUpperCase();
+    const len = word.length;
+
+    if (allUpper) {
+        return 'M E O W !!!';
+    } else if (len > 10) {
+        return hasUpper ? '(=ↀωↀ=) MEowMeOWMeoWMEOW' : '(=^-ω-^=) meowmeowmeowmeowmeow';
+    } else if (len > 5) {
+        return hasUpper ? '(=♡ω♡=) MEOW! MEOW!! MEOW!!!!!!!' : '(=ＴェＴ=) meow meow meow!';
+    } else if (len >= 3) {
+        return hasUpper ? 'ヾ(=`ω´=)ノ” Meow..MEOW!' : '(=｀ω´=) meow meow!';
+    } else {
+        return hasUpper ? '(=˃ᆺ˂=) MEOW!' : '(=^‥^=) meow!';
+    }
+}
