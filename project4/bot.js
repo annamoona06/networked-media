@@ -25,7 +25,7 @@ setInterval(async () => {
     // TODO: ADD API REQUEST
     // change localhost to your partner's droplet IP (their server must be running)
     // if needed, change the port (6003) to match your partner's app.listen in *their* server.js
-    let url = 'http://161.35.53.32//:6003/get-data';
+    let url = 'http://161.35.53.32:6003/get-data';
 
     let json = await response.json();
 
