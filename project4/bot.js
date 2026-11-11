@@ -28,6 +28,7 @@ setInterval(async () => {
     let url = 'http://161.35.53.32:6003/get-data';
 
     let json = await response.json();
+    let response = await fetch(url)
 
     if (json.length === 0) return; // nothing to post yet
 
