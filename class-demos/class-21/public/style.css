@@ -1,0 +1,18 @@
+form{
+    /* allow width and height to be adjustable */
+    display: flex;
+
+    flex-direction : column;
+
+    /*flex grow does a proportion calc*/
+    flex-grow: 2
+}
+
+.left, .right{
+    /*this compare against all of the other children of the dlex container*/
+    flex-grow:1
+}
+
+body{
+    display: flex;
+}
