@@ -10,11 +10,15 @@ const masto = m.createRestAPIClient({
     accessToken: process.env.TOKEN,
 });
 
+//quiet times settings
+const Quiet_START = 20;
+const Quiet_END = 3;  
+
 async function makeStatus(text) {
     const status = await masto.v1.statuses.create({
         status: text,
         // TODO: change visability to public when project ready to run
-        visibility: 'private',
+        visibility: 'public',
     });
 }
 
@@ -22,6 +26,11 @@ async function makeStatus(text) {
 let index = 0;
 
 async function runBot() {
+    if (isQuietTime()) {
+        console.log('quiet hours, not posting');
+        return;
+    }
+
     try{
     // TODO: ADD API REQUEST
     // change localhost to your partner's droplet IP (their server must be running)
@@ -87,4 +96,15 @@ function meowWord(word) {
     } else {
         return hasUpper ? 'Salma( ´・ω・)ﾉ(=˃ᆺ˂=) MEOW!' : 'Kiki( ´・ω・)ﾉ(=^‥^=) meow!';
     }
+}
+
+function isQuietTime() {
+    const hour = Number(
+        new Intl.DateTimeFormat('en-US', {
+            timeZone: 'America/New_York',
+            hour: 'numeric',
+            hourCycle: 'h23',
+        }).format(new Date())
+    );
+    return hour >= Quiet_START || hour < Quiet_END;
 }
