@@ -13,9 +13,15 @@
   "type": "commonjs",
   "dependencies": {
     "@seald-io/nedb": "^4.1.2",
+    "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "express": "^5.3.0",
+    "express-session": "^1.19.0",
     "multer": "^2.5.0",
+    "nedb-promises-session-store": "^1.0.4",
     "nunjucks": "^3.2.4"
+  },
+  "allowScripts": {
+    "bcrypt@6.0.0": true
   }
 }

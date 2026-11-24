@@ -8,25 +8,26 @@ body {
 	margin: 0;
 }
 
-body > section {
+body>section {
 	flex-grow: 1;
 }
 
-body > main {
+body>main {
 	flex-grow: 3;
 	background-color: lavender;
 	height: 100vh;
+
 	display: flex;
 	flex-direction: column;
 }
 
-body > main > nav {
+body>main>nav {
 	height: 100px;
 	background-color: bisque;
 	position: relative;
 }
 
-body > main > nav > .links {
+body>main>nav>.links {
 	display: flex;
 	flex-direction: row;
 	position: absolute;
